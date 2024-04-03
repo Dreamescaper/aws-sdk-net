@@ -14,7 +14,7 @@
  */
 
 /*
- * Do not modify this file. This file is generated from the json-protocol-2018-01-01.normal.json service model.
+ * Do not modify this file. This file is generated from the rest-json-protocol-2019-12-16.normal.json service model.
  */
 using System;
 using System.Collections.Generic;
@@ -23,19 +23,19 @@ using System.IO;
 using System.Text;
 using System.Xml.Serialization;
 
-using Amazon.JsonProtocol.Model;
+using Amazon.RestJsonProtocol.Model;
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
 using Amazon.Runtime.Internal.Transform;
 using Amazon.Runtime.Internal.Util;
 using ThirdParty.Json.LitJson;
 
-namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
+namespace Amazon.RestJsonProtocol.Model.Internal.MarshallTransformations
 {
     /// <summary>
-    /// StructWithJsonName Marshaller
+    /// StructureListMember Marshaller
     /// </summary>
-    public class StructWithJsonNameMarshaller : IRequestMarshaller<StructWithJsonName, JsonMarshallerContext> 
+    public class StructureListMemberMarshaller : IRequestMarshaller<StructureListMember, JsonMarshallerContext> 
     {
         /// <summary>
         /// Unmarshaller the response from the service to the response class.
@@ -43,12 +43,18 @@ namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
         /// <param name="requestObject"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public void Marshall(StructWithJsonName requestObject, JsonMarshallerContext context)
+        public void Marshall(StructureListMember requestObject, JsonMarshallerContext context)
         {
-            if(requestObject.IsSetValue())
+            if(requestObject.IsSetA())
             {
-                context.Writer.WritePropertyName("Value");
-                context.Writer.Write(requestObject.Value);
+                context.Writer.WritePropertyName("value");
+                context.Writer.Write(requestObject.A);
+            }
+
+            if(requestObject.IsSetB())
+            {
+                context.Writer.WritePropertyName("other");
+                context.Writer.Write(requestObject.B);
             }
 
         }
@@ -56,7 +62,7 @@ namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
         /// <summary>
         /// Singleton Marshaller.
         /// </summary>
-        public readonly static StructWithJsonNameMarshaller Instance = new StructWithJsonNameMarshaller();
+        public readonly static StructureListMemberMarshaller Instance = new StructureListMemberMarshaller();
 
     }
 }

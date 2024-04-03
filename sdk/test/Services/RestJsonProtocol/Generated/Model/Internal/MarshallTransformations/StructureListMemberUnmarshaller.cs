@@ -14,7 +14,7 @@
  */
 
 /*
- * Do not modify this file. This file is generated from the json-protocol-2018-01-01.normal.json service model.
+ * Do not modify this file. This file is generated from the rest-json-protocol-2019-12-16.normal.json service model.
  */
 using System;
 using System.Collections.Generic;
@@ -24,26 +24,26 @@ using System.Net;
 using System.Text;
 using System.Xml.Serialization;
 
-using Amazon.JsonProtocol.Model;
+using Amazon.RestJsonProtocol.Model;
 using Amazon.Runtime;
 using Amazon.Runtime.Internal;
 using Amazon.Runtime.Internal.Transform;
 using Amazon.Runtime.Internal.Util;
 using ThirdParty.Json.LitJson;
 
-namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
+namespace Amazon.RestJsonProtocol.Model.Internal.MarshallTransformations
 {
     /// <summary>
-    /// Response Unmarshaller for StructWithJsonName Object
+    /// Response Unmarshaller for StructureListMember Object
     /// </summary>  
-    public class StructWithJsonNameUnmarshaller : IUnmarshaller<StructWithJsonName, XmlUnmarshallerContext>, IUnmarshaller<StructWithJsonName, JsonUnmarshallerContext>
+    public class StructureListMemberUnmarshaller : IUnmarshaller<StructureListMember, XmlUnmarshallerContext>, IUnmarshaller<StructureListMember, JsonUnmarshallerContext>
     {
         /// <summary>
         /// Unmarshaller the response from the service to the response class.
         /// </summary>  
         /// <param name="context"></param>
         /// <returns></returns>
-        StructWithJsonName IUnmarshaller<StructWithJsonName, XmlUnmarshallerContext>.Unmarshall(XmlUnmarshallerContext context)
+        StructureListMember IUnmarshaller<StructureListMember, XmlUnmarshallerContext>.Unmarshall(XmlUnmarshallerContext context)
         {
             throw new NotImplementedException();
         }
@@ -53,9 +53,9 @@ namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
         /// </summary>  
         /// <param name="context"></param>
         /// <returns>The unmarshalled object</returns>
-        public StructWithJsonName Unmarshall(JsonUnmarshallerContext context)
+        public StructureListMember Unmarshall(JsonUnmarshallerContext context)
         {
-            StructWithJsonName unmarshalledObject = new StructWithJsonName();
+            StructureListMember unmarshalledObject = new StructureListMember();
             context.Read();
             if (context.CurrentTokenType == JsonToken.Null) 
                 return null;
@@ -63,10 +63,16 @@ namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
             int targetDepth = context.CurrentDepth;
             while (context.ReadAtDepth(targetDepth))
             {
-                if (context.TestExpression("Value", targetDepth))
+                if (context.TestExpression("value", targetDepth))
                 {
                     var unmarshaller = StringUnmarshaller.Instance;
-                    unmarshalledObject.Value = unmarshaller.Unmarshall(context);
+                    unmarshalledObject.A = unmarshaller.Unmarshall(context);
+                    continue;
+                }
+                if (context.TestExpression("other", targetDepth))
+                {
+                    var unmarshaller = StringUnmarshaller.Instance;
+                    unmarshalledObject.B = unmarshaller.Unmarshall(context);
                     continue;
                 }
             }
@@ -74,12 +80,12 @@ namespace Amazon.JsonProtocol.Model.Internal.MarshallTransformations
         }
 
 
-        private static StructWithJsonNameUnmarshaller _instance = new StructWithJsonNameUnmarshaller();        
+        private static StructureListMemberUnmarshaller _instance = new StructureListMemberUnmarshaller();        
 
         /// <summary>
         /// Gets the singleton.
         /// </summary>  
-        public static StructWithJsonNameUnmarshaller Instance
+        public static StructureListMemberUnmarshaller Instance
         {
             get
             {
