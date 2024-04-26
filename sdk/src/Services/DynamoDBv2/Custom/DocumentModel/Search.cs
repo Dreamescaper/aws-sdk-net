@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Amazon.DynamoDBv2.Model;
-using Amazon.Runtime;
 using System.Globalization;
 #if AWS_ASYNC_API
 using System.Threading.Tasks;
@@ -30,9 +29,6 @@ namespace Amazon.DynamoDBv2.DocumentModel
     /// <summary>
     /// Search response object
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public partial class Search
     {
         #region Internal constructors
@@ -286,7 +282,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
 
                         Dictionary<string, Condition> keyConditions, filterConditions;
                         SplitQueryFilter(Filter, SourceTable, queryReq.IndexName, out keyConditions, out filterConditions);
-                        
+
                         if (keyConditions?.Count > 0)
                         {
                             queryReq.KeyConditions = keyConditions;

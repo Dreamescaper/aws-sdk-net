@@ -24,9 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 #endif
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Text;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.Runtime.Internal.Util;
 
@@ -36,9 +34,6 @@ namespace Amazon.DynamoDBv2.DocumentModel
     /// The Table class is the starting object when using the Document API. It is used to Get documents from the DynamoDB table
     /// and write documents back to the DynamoDB table.
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public partial class Table
     {
         #region Private/internal members
@@ -53,7 +48,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
 
         internal Table.DynamoDBConsumer TableConsumer { get { return Config.Consumer; } }
         internal DynamoDBEntryConversion Conversion { get { return Config.Conversion; } }
-        internal bool IsEmptyStringValueEnabled { get {return Config.IsEmptyStringValueEnabled; } }
+        internal bool IsEmptyStringValueEnabled { get { return Config.IsEmptyStringValueEnabled; } }
         internal IEnumerable<string> StoreAsEpoch { get { return Config.AttributesToStoreAsEpoch; } }
         internal IEnumerable<string> KeyNames { get { return Keys.Keys; } }
 
@@ -136,7 +131,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
                 // different credentials identify the same physical table
                 return SdkCache.GetCache<string, TableDescription>(null, TableInfoCacheIdentifier, StringComparer.Ordinal);
             }
-            
+
             // Assuming CachingMode.Default, use the SdkCache's default credentials, region and service url to form the cache key.
             // Each of these could identify a different physical table
             return SdkCache.GetCache<string, TableDescription>(DDBClient, TableInfoCacheIdentifier, StringComparer.Ordinal);
@@ -456,6 +451,9 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// <param name="property">.NET Property that is to be stored in DynamoDB</param>
         /// <param name="flatConfig">Normalized, internal high-level DynamoDB configuration</param>
         /// <returns><see cref="DynamoDBEntryType"/> if it can be determined for the given property, otherwise an exception will be thrown</returns>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
+#endif
         private static DynamoDBEntryType GetPrimitiveEntryTypeForProperty(PropertyStorage property, DynamoDBFlatConfig flatConfig)
         {
             if (property.StoreAsEpoch)
@@ -490,6 +488,9 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// <param name="config">Table configuration</param>
         /// <param name="itemStorageConfig">The object persistence configuration for a .NET class that is mapped to the given table</param>
         /// <param name="flatConfig">Normalized, internal high-level DynamoDB configuration</param>
+#if NET8_0_OR_GREATER
+        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
+#endif
         internal static Table CreateTableFromItemStorageConfig(IAmazonDynamoDB client, TableConfig config, ItemStorageConfig itemStorageConfig, DynamoDBFlatConfig flatConfig)
         {
             Table table = new Table(client, config);
@@ -532,7 +533,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
 
                 table.Attributes.Add(new AttributeDefinition { AttributeName = property.AttributeName, AttributeType = PrimitiveToScalar(primitiveType) });
             }
-            
+
             //
             // Add Local Secondary Indices in the table metadata
             //
@@ -788,18 +789,18 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// <returns>
         /// True if table was successfully loaded; otherwise false.
         /// </returns>
-        public static bool TryLoadTable(IAmazonDynamoDB ddbClient, 
-                                        string tableName, 
-                                        DynamoDBEntryConversion conversion, 
-                                        bool isEmptyStringValueEnabled, 
-                                        MetadataCachingMode? metadataCachingMode, 
+        public static bool TryLoadTable(IAmazonDynamoDB ddbClient,
+                                        string tableName,
+                                        DynamoDBEntryConversion conversion,
+                                        bool isEmptyStringValueEnabled,
+                                        MetadataCachingMode? metadataCachingMode,
                                         out Table table)
         {
-            var config = new TableConfig(tableName, 
-                                         conversion, 
-                                         DynamoDBConsumer.DocumentModel, 
-                                         storeAsEpoch: null, 
-                                         isEmptyStringValueEnabled: isEmptyStringValueEnabled, 
+            var config = new TableConfig(tableName,
+                                         conversion,
+                                         DynamoDBConsumer.DocumentModel,
+                                         storeAsEpoch: null,
+                                         isEmptyStringValueEnabled: isEmptyStringValueEnabled,
                                          metadataCachingMode: metadataCachingMode);
 
             return TryLoadTable(ddbClient, config, out table);

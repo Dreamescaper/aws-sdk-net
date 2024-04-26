@@ -12,18 +12,15 @@
  * express or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-using Amazon.DynamoDBv2.Model;
 using System;
 using System.Collections.Generic;
+using Amazon.DynamoDBv2.Model;
 
 namespace Amazon.DynamoDBv2.DocumentModel
 {
     /// <summary>
     /// Builder that constructs a <see cref="Table"/>
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public class TableBuilder : ITableBuilder
     {
         /// <summary>
@@ -35,7 +32,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// Keeps track internally of attributes that have already been saved in <see cref="Table.Attributes"/>,
         /// since they can be shared by different indices.
         /// </summary>
-        private HashSet<string> _attributesAlreadyProcessed; 
+        private HashSet<string> _attributesAlreadyProcessed;
 
         /// <summary>
         /// Creates a builder object to construct a <see cref="Table"/>
@@ -58,7 +55,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// requests. This controls how the cache key is derived, which influences when the SDK will call 
         /// IAmazonDynamoDB.DescribeTable(string) internally to populate the cache.</param>
         public TableBuilder(IAmazonDynamoDB ddbClient, string tableName, DynamoDBEntryConversion conversion, bool isEmptyStringValueEnabled, MetadataCachingMode? metadataCachingMode)
-            : this (ddbClient, new TableConfig(tableName, conversion, Table.DynamoDBConsumer.DocumentModel, null, isEmptyStringValueEnabled, metadataCachingMode))
+            : this(ddbClient, new TableConfig(tableName, conversion, Table.DynamoDBConsumer.DocumentModel, null, isEmptyStringValueEnabled, metadataCachingMode))
         {
         }
 
@@ -92,7 +89,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             {
                 throw new ArgumentNullException(nameof(hashKeyAttribute), "The name of the hash key attribute is required.");
             }
-            
+
             if (_table.HashKeys.Count != 0)
             {
                 throw new ArgumentOutOfRangeException("Only a single hash key is supported, and one has already been added.");
@@ -167,7 +164,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             {
                 throw new ArgumentException("A local secondary index uses the table's hash key, which was not provided. Call AddHashKey prior to AddLocalSecondaryIndex.");
 
-            }            
+            }
 
             _table.LocalSecondaryIndexNames.Add(indexName);
 

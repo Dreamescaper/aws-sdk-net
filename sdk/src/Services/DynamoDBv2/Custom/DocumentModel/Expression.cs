@@ -15,20 +15,15 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 using Amazon.DynamoDBv2.Model;
-using Amazon.Util;
 
 namespace Amazon.DynamoDBv2.DocumentModel
 {
     /// <summary>
     /// Expressions are used for conditional deletes and filtering for query and scan operations.
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public class Expression
     {
         private Dictionary<string, string> _expressionAttributeNames = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -112,7 +107,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
         {
             request.ConditionExpression = this.ExpressionStatement;
             request.ExpressionAttributeValues = ConvertToAttributeValues(this.ExpressionAttributeValues, table);
-        
+
             if (this.ExpressionAttributeNames?.Count > 0)
             {
                 request.ExpressionAttributeNames = new Dictionary<string, string>(this.ExpressionAttributeNames);
@@ -201,7 +196,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
             var fean = filterExpression.ExpressionAttributeNames;
             var combinedEan = Common.Combine(kean, fean, StringComparer.Ordinal);
 
-            if(combinedEan?.Count > 0)
+            if (combinedEan?.Count > 0)
             {
                 request.ExpressionAttributeNames = combinedEan;
             }

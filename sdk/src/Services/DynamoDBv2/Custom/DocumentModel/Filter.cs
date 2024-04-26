@@ -18,16 +18,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Amazon.DynamoDBv2.Model;
-using Amazon.Util;
 
 namespace Amazon.DynamoDBv2.DocumentModel
 {
     /// <summary>
     /// Filter for use with scan and query operations
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public class Filter
     {
         #region Private members
@@ -35,9 +31,6 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// <summary>
         /// Filter conditions
         /// </summary>
-#if NET8_0_OR_GREATER
-        [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
         protected class FilterCondition
         {
             /// <summary>
@@ -138,7 +131,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
                         var entry = DynamoDBEntries[i];
                         if (shouldConvertToEpochSeconds)
                             entry = Document.DateTimeToEpochSeconds(entry, attributeName);
-                        
+
                         var attributeConversionConfig = new DynamoDBEntry.AttributeConversionConfig(conversion, isEmptyStringValueEnabled);
                         var attributeValue = entry.ConvertToAttributeValue(attributeConversionConfig);
                         attributeValues.Add(attributeValue);
@@ -241,7 +234,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
         public static Filter FromConditions(Dictionary<string, Condition> conditions)
         {
             Filter ret = new Filter();
-            foreach(var kvp in conditions)
+            foreach (var kvp in conditions)
             {
                 string name = kvp.Key;
                 Condition condition = kvp.Value;
@@ -338,9 +331,6 @@ namespace Amazon.DynamoDBv2.DocumentModel
     /// <summary>
     /// Scan filter.
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public class ScanFilter : Filter
     {
         /// <summary>
@@ -383,9 +373,6 @@ namespace Amazon.DynamoDBv2.DocumentModel
     /// <summary>
     /// Query filter.
     /// </summary>
-#if NET8_0_OR_GREATER
-    [System.Diagnostics.CodeAnalysis.RequiresUnreferencedCode(Amazon.DynamoDBv2.Custom.Internal.InternalConstants.RequiresUnreferencedCodeMessage)]
-#endif
     public class QueryFilter : Filter
     {
         /// <summary>
@@ -485,7 +472,7 @@ namespace Amazon.DynamoDBv2.DocumentModel
         /// <param name="values">Values to compare to</param>
         public void AddCondition(string nonKeyAttributeName, ScanOperator op, params DynamoDBEntry[] values)
         {
-            ComparisonOperator comparisonOperator= EnumMapper.Convert(op);
+            ComparisonOperator comparisonOperator = EnumMapper.Convert(op);
             AddCondition(nonKeyAttributeName, comparisonOperator, values.ToList());
         }
     }
