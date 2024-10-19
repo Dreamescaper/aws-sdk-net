@@ -41,6 +41,7 @@ using Amazon.Runtime.Endpoints;
 using System.Diagnostics.CodeAnalysis;
 using System.ComponentModel.Design;
 using System.Threading;
+using System.Text.Json;
 
 namespace Amazon.S3
 {
@@ -533,6 +534,71 @@ namespace Amazon.S3
         {
             return GetPreSignedURLInternal(request);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public GetPreSignedPostUrlResponse GeneratePreSignedPost(GetPreSignedPostUrlRequest request)
+        {
+            // This null check will occur if you're using local S3. This won't work with local S3 - and cannot as far as I can tell - but at least it won't break.
+            var regionName = this.Config.RegionEndpoint?.SystemName ?? "us-east-1";
+            var credentials = this.Credentials.GetCredentials();
+            var signingDate = this.Config.CorrectedUtcNow.ToString("yyyyMMddTHHmmssZ", CultureInfo.InvariantCulture);
+            const string signingAlgorithm = "AWS4-HMAC-SHA256";
+            var shortDate = signingDate[..8];
+            var credentialScope = $"{shortDate}/{regionName}/s3/aws4_request";
+            var parsedCredentials = $"{credentials.AccessKey}/{credentialScope}";
+            var url = new Uri($"https://{request.BucketName}.s3.{regionName}.amazonaws.com");
+
+            request.Conditions.Add(new ExactMatchCondition("bucket", request.BucketName));
+            request.Conditions.Add(new ExactMatchCondition("X-Amz-Algorithm", "AWS4-HMAC-SHA256"));
+            request.Conditions.Add(new ExactMatchCondition("X-Amz-Credential", $"{credentials.AccessKey}/{credentialScope}"));
+            request.Conditions.Add(new ExactMatchCondition("X-Amz-Date", signingDate));
+            if (!string.IsNullOrWhiteSpace(credentials.Token))
+            {
+                request.Conditions.Add(new ExactMatchCondition("X-Amz-Security-Token", credentials.Token));
+            }
+
+            if (request.Key.EndsWith("${filename}"))
+            {
+                var keyWithoutFilename = request.Key[..^"${filename}".Length];
+                request.Conditions.Add(new StartsWithMatchCondition("$key", keyWithoutFilename));
+            }
+            else
+            {
+                request.Conditions.Add(new ExactMatchCondition("$key", request.Key));
+            }
+
+            var policy = new PostPolicy
+            {
+                Expiration = this.Config.CorrectedUtcNow.Add(request.Expires ?? TimeSpan.FromSeconds(3600)),
+                Conditions = request.Conditions,
+            };
+
+            var policyJson = JsonSerializer.Serialize(policy);
+            var policyEncoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(policyJson));
+
+            var signingKey = AWS4Signer.ComposeSigningKey(credentials.SecretKey, regionName, shortDate, "s3");
+            var signature = AWS4Signer.ComputeKeyedHash(SigningAlgorithm.HmacSHA256, signingKey, policyEncoded);
+
+            var fields = new Dictionary<string, string> {
+            { "Key", request.Key },
+            { "Bucket", request.BucketName },
+            { "Policy", policyEncoded },
+            { "X-Amz-Signature", Convert.ToHexString(signature).ToLowerInvariant() },
+            { "X-Amz-Algorithm", signingAlgorithm },
+            { "X-Amz-Credential", parsedCredentials },
+            { "X-Amz-Date", signingDate },
+        };
+
+            if (!string.IsNullOrWhiteSpace(credentials.Token))
+            {
+                fields.Add("X-Amz-Security-Token", credentials.Token);
+            }
+
+            return new GetPreSignedPostUrlResponse { Url = url.ToString(), Fields = fields };
+        }
+
 #if AWS_ASYNC_API
         /// <summary>
         /// Asynchronously create a signed URL allowing access to a resource that would 
